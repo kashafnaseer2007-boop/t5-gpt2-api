@@ -3,12 +3,16 @@ from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 from transformers import T5ForConditionalGeneration, T5Tokenizer, GPT2LMHeadModel, GPT2Tokenizer
 import torch
-from keys import API_KEY
+from os
 
-app = FastAPI()
+API_KEY = os.getenv("API_KEY", "supersecret123")
+
+app = FastAPI(title="T5 Summarization & GPT-2 Text Generation API",
+              description="A secure ML API serving fine-tuned T5 and GPT-2 models. Built with FastAPI + Hugging Face Transformers.",
+              version="1.0.0")
 
 # ---------- API Key Guard ----------
-api_key_header = APIKeyHeader(name="X-API-Key")
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 def verify_api_key(key: str = Depends(api_key_header)):
     if key != API_KEY:
